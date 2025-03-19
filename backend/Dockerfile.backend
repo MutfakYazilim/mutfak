@@ -1,0 +1,30 @@
+FROM python:3.11-slim
+
+# İş dizinini ayarla
+WORKDIR /app
+
+# Gerekli sistem paketlerini yükle
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python bağımlılıklarını kopyala ve yükle
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir email-validator apscheduler jinja2 uvicorn && \
+    pip install --no-cache-dir bcrypt==4.0.1 passlib==1.7.4
+
+# Uygulama kodunu kopyala
+COPY . .
+
+# Environment değişkenlerini ayarla (varsayılan değerler)
+ENV ALLOWED_ORIGINS="http://localhost:3000,http://frontend:3000"
+ENV DATABASE_URL="postgresql://postgres:postgres@db:5432/mutfak"
+ENV PYTHONPATH="/app"
+
+# Port'u dışa aç
+EXPOSE 8000
+
+# Uygulamayı çalıştır - doğru giriş noktasını kullanıyoruz ve reload özelliğini aktif ediyoruz
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"] 

@@ -1,0 +1,71 @@
+services:
+  # PostgreSQL veritabanı
+  db:
+    image: postgres:14
+    container_name: mutfak-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mutfak
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mutfak-network
+
+  # Backend uygulaması
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+      no_cache: true  # Önbelleği temizleyerek yeniden oluştur
+    container_name: mutfak-backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mutfak
+      - SECRET_KEY=changeme_in_production
+      - ALLOWED_ORIGINS=http://localhost:8080,http://frontend:8080
+      - PYTHONPATH=/app
+      - LOG_LEVEL=DEBUG
+    ports:
+      - "8000:8000"
+    networks:
+      - mutfak-network
+    volumes:
+      - ./backend:/app:ro  # Geliştirme için kaynak dosyaları bağla (salt okunur)
+
+  # Frontend uygulaması
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+      no_cache: true
+    container_name: mutfak-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://backend:8000
+    networks:
+      - mutfak-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Node modüllerini konteynerde tut
+    command: npm run dev -- --host 0.0.0.0
+
+# Volumes
+volumes:
+  postgres_data:
+    driver: local
+
+# Networks
+networks:
+  mutfak-network:
+    driver: bridge 

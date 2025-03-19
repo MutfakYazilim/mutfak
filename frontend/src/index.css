@@ -1,0 +1,153 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 33% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 220 92% 54%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+
+    --accent: 220 14% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71% 45%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 213 30% 97%;
+    --sidebar-primary: 224 76% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 223 46% 16%;
+    --sidebar-accent-foreground: 213 30% 97%;
+    --sidebar-border: 223 46% 16%;
+    --sidebar-ring: 217 91% 60%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 213 30% 97%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 213 30% 97%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 213 30% 97%;
+
+    --primary: 224 76% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 223 46% 16%;
+    --secondary-foreground: 213 30% 97%;
+
+    --muted: 223 46% 16%;
+    --muted-foreground: 215 20% 75%;
+
+    --accent: 223 46% 16%;
+    --accent-foreground: 213 30% 97%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 213 30% 97%;
+
+    --border: 223 46% 16%;
+    --input: 223 46% 16%;
+    --ring: 224 76% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+
+  /* Form elements focus styles */
+  input:focus, 
+  textarea:focus, 
+  select:focus, 
+  button:focus {
+    @apply outline-none ring-2 ring-primary/20 ring-offset-1 ring-offset-background transition-all;
+  }
+
+  /* Smooth transitions */
+  a, button, input, select, textarea {
+    @apply transition-all duration-200;
+  }
+}
+
+@layer components {
+  .input-container {
+    @apply relative my-4;
+  }
+
+  .input-label {
+    @apply absolute left-3 top-1 text-xs text-muted-foreground pointer-events-none transition-all;
+  }
+  
+  .input-field {
+    @apply w-full px-3 pt-6 pb-2 bg-transparent border rounded-md text-foreground focus:border-primary;
+  }
+
+  .input-with-icon {
+    @apply pl-10;
+  }
+
+  .input-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground;
+  }
+
+  .card-glass {
+    @apply bg-background/60 backdrop-blur-md border border-border rounded-lg shadow-sm;
+  }
+
+  .glassmorphism {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02];
+  }
+}

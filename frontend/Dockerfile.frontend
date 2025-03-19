@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+# İş dizinini ayarla
+WORKDIR /app
+
+# Bağımlılıkları kopyala ve yükle
+COPY package.json package-lock.json* ./
+RUN npm install
+
+# Kaynak dosyaları kopyala
+COPY . .
+
+# Port'u dışa aç
+EXPOSE 8080
+
+# Geliştirme sunucusunu başlat
+CMD ["npm", "run", "dev"] 
